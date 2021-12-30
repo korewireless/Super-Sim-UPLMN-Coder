@@ -3,6 +3,7 @@
 '''
 Super SIM UPLMN Codec
 
+@version    1.0.0
 @author     Tony Smith (@smittytone)
 @copyright  Twilio, Inc.
 @licence    MIT
