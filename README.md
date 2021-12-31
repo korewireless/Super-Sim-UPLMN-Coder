@@ -19,17 +19,17 @@ Values are not checked for validity.
 **Examples**
 
 ```
-$ python plmn-codec.py 310 410
+$ python plmn_codec.py 310 410
 AT+CRSM=214,28512,0,0,5,1300144080
 ```
 
 ```
-$ python plmn-codec.py 310 410 310 260
+$ python plmn_codec.py 310 410 310 260
 AT+CRSM=214,28512,0,0,10,13001440801300624080
 ```
 
 ```
-$ python plmn-codec.py 310 410 310
+$ python plmn_codec.py 310 410 310
 [ERROR] An MCC-MNC pairing is incomplete
 ```
 
@@ -44,24 +44,24 @@ You can decode UPLMN table entries, or entire tables, with the `-p` option.
 **Examples**
 
 ```
-$ python plmn-codec.py -p '+CRSM: 144,0,1300144080'
+$ python plmn_codec.py -p '+CRSM: 144,0,1300144080'
 1 MCC: 310 MNC: 410
 ```
 
 ```
-$ python plmn-codec.py -p AT+CRSM=214,28512,0,0,10,13006240801300144080
+$ python plmn_codec.py -p AT+CRSM=214,28512,0,0,10,13006240801300144080
 1 MCC: 310 MNC: 260
 2 MCC: 310 MNC: 410
 ```
 
 ```
-$ python plmn-codec.py -p 13006240801300144080
+$ python plmn_codec.py -p 13006240801300144080
 1 MCC: 310 MNC: 260
 2 MCC: 310 MNC: 410
 ```
 
 ```
-$ python plmn-codec.py -p 1300624
+$ python plmn_codec.py -p 1300624
 [ERROR] Malformed PLMNS data: 1300624
 ```
 
