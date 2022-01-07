@@ -35,8 +35,7 @@ $ python plmn_codec.py 310 410 310
 
 The output is in the form of an usage-ready AT command set to write (`214`) the entered values to the SIM’s UPLMN table (`28512`) with an offset of zero (`0,0` — MSB and LSB of the offset), ie. at the start of the table. You can edit the offset before sending the command if you need to insert values further into the UPLMN table. The number of bytes (`10`) is calculated and added to the command for you.
 
-Each MCC-MNC paring is appended with RAT (Radio Access Technology) values, ie. `4080`. This indicates a primary preferred RAT of 4G (`40`) and a secondary RAT of GSM (`80`). For full details of the encoding, please see [**ETSI Technical Specification 131 102**](https://www.etsi.org/deliver/etsi_ts/131100_131199/131102/15.05.00_60/ts_131102v150500p.pdf).
-
+Each MCC-MNC paring is appended with RAT (Radio Access Technology) values: `4080`. This indicates a primary preferred RAT of 4G (`40`) and a secondary RAT of GSM (`80`). For full details of the encoding, please see [**ETSI Technical Specification 131 102**](https://www.etsi.org/deliver/etsi_ts/131100_131199/131102/15.05.00_60/ts_131102v150500p.pdf).
 
 #### Decoding
 
