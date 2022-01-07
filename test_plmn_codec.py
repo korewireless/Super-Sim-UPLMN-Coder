@@ -27,11 +27,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 
+
 '''
 IMPORTS
 '''
 import unittest
-from plmn_codec import plmn_encoder, plmn_decoder, decode_table
+from plmn_codec import plmn_encoder, plmn_decoder, decode_table, main
+
 
 '''
 TEST CASES
@@ -71,6 +73,43 @@ class CodecTests(unittest.TestCase):
 
         # Short table entry
         self.assertEqual(decode_table("82F988408"), "")
+
+
+    # main() tests: arguments
+    def test_main_missing_final_arg(self):
+        with self.assertRaises(SystemExit) as cm:
+            main(["-p","13006240801300144080","-p"])
+            self.assertEqual(cm.exception.code, 1)
+
+
+    def test_main_missing_inline_arg(self):
+        with self.assertRaises(SystemExit) as cm:
+            main(["-p"])
+            self.assertEqual(cm.exception.code, 1)
+
+
+    def test_main_bad_arg(self):
+        with self.assertRaises(SystemExit) as cm:
+            main(["-q","13006240801300144080"])
+            self.assertEqual(cm.exception.code, 1)
+
+
+    def test_main_malformed_table(self):
+        with self.assertRaises(SystemExit) as cm:
+            main(["-p","130062408013001440"])
+            self.assertEqual(cm.exception.code, 1)
+
+
+    def test_main_mispaired_mcc_mnc(self):
+        with self.assertRaises(SystemExit) as cm:
+            main(["310", "410", "310"])
+            self.assertEqual(cm.exception.code, 1)
+
+
+    def test_main_no_args(self):
+        with self.assertRaises(SystemExit) as cm:
+            main([])
+            self.assertEqual(cm.exception.code, 0)
 
 
 '''

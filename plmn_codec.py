@@ -126,17 +126,15 @@ def show_version():
 
 
 '''
-RUNTIME START
+Primary code
 '''
-if __name__ == '__main__':
+def main(args):
     entries = []
     arg_is_value = False
     last_option = ""
 
-    if len(sys.argv) > 1:
-        for index, item in enumerate(sys.argv):
-            if index == 0: continue
-
+    if len(args):
+        for index, item in enumerate(args):
             if arg_is_value:
                 arg_is_value = False
                 if item[0] == "-":
@@ -148,14 +146,14 @@ if __name__ == '__main__':
                     show_err_and_exit("Malformed PLMNS data: " + item)
                 continue
 
-            if item in ("-h", "--help"):
+            if item.lower() in ("-h", "--help"):
                 show_help()
                 sys.exit(0)
 
-            if item in ("-p", "--plmn"):
+            if item.lower() in ("-p", "--plmn"):
                 last_option = item
                 arg_is_value = True
-                if index == len(sys.argv) - 1:
+                if index == len(args) - 1:
                     show_err_and_exit("Missing value after option " + last_option)
                 continue
 
@@ -163,6 +161,9 @@ if __name__ == '__main__':
                 show_err_and_exit("Unknown option: " + item)
 
             entries.append(item)
+    else:
+        show_version()
+        sys.exit(0)
 
     entry_count = len(entries)
     if entry_count % 2 != 0:
@@ -173,3 +174,10 @@ if __name__ == '__main__':
         for i in range(0, entry_count, 2):
             plmn_list += plmn_encoder(entries[i], entries[i + 1])
         print("AT+CRSM=214,28512,0,0,{},{}".format(len(plmn_list) // 2, plmn_list))
+
+
+'''
+RUNTIME START
+'''
+if __name__ == '__main__':
+    main(sys.argv[1:])
