@@ -46,19 +46,19 @@ You can decode UPLMN table entries, or entire tables, with the `-p` option.
 
 ```
 $ python plmn_codec.py -p '+CRSM: 144,0,1300144080'
-1 MCC: 310 MNC: 410
+1. MCC: 310 MNC: 410 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 ```
 
 ```
 $ python plmn_codec.py -p AT+CRSM=214,28512,0,0,10,13006240801300144080
-1 MCC: 310 MNC: 260
-2 MCC: 310 MNC: 410
+1. MCC: 310 MNC: 260 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
+2. MCC: 310 MNC: 410 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 ```
 
 ```
 $ python plmn_codec.py -p 13006240801300144080
-1 MCC: 310 MNC: 260
-2 MCC: 310 MNC: 410
+1. MCC: 310 MNC: 260 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
+2. MCC: 310 MNC: 410 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 ```
 
 ```

@@ -62,7 +62,42 @@ def plmn_decoder(plmn):
     # Rearrange octets and output
     mcc = (plmn[1] + plmn[0] + plmn[3]).replace("F", "")
     mnc = (plmn[5] + plmn[4] + plmn[2]).replace("F", "")
-    return (mcc, mnc)
+    lte = int(plmn[6] + plmn[7], 16)
+    gsm = int(plmn[8] + plmn[9], 16)
+    return (mcc, mnc, lte, gsm)
+
+
+'''
+Determine the PLMN entry's LTE mode
+'''
+def decode_lte(byte_value):
+    sub_lte = ["E-UTRAN in WB-S1, NB-S1 modes", "E-UTRAN in NB-S1 mode only",
+               "E-UTRAN in WB-S1 mode only", "E-UTRAN in WB-S1, NB-S1 modes"]
+    code = ""
+    if byte_value & 0x80: code += "UTRAN, "
+    if byte_value & 0x40:
+        code += (sub_lte[(byte_value & 0x30) >> 4] + ", ")
+    if byte_value & 0x08: code += "NG-RAN, "
+    if len(code): code = code[:-2]
+    if byte_value & 0x07 > 0: code += " -- WARNING: Reserved bits set"
+    return code
+
+
+'''
+Determine the PLMN entry's GSM/CDMA mode
+'''
+def decode_gsm(byte_value):
+    sub_gsm = ["GSM + EC-GSM-IoT", "GSM",
+               "EC-GSM-IoT", "GSM + EC-GSM-IoT"]
+    code = ""
+    if byte_value & 0x80:
+        code += (sub_gsm[(byte_value & 0x0C) >> 2] + ", ")
+    if byte_value & 0x40: code += "GSM COMPACT, "
+    if byte_value & 0x20: code += "CDMA2000 HRPD, "
+    if byte_value & 0x10: code += "CDMA2000 1xRTT, "
+    if len(code): code = code[:-2]
+    if byte_value & 0x03 > 0: code += " -- WARNING: Reserved bits set"
+    return code
 
 
 '''
@@ -74,8 +109,9 @@ yields:
 which can be decoded with the -p switch:
     'python plmn_codec.py -p 144,0,32F405408032F4514080'
 to give:
-    1. MCC: 234 MNC: 50
-    2. MCC: 234 MNC: 15
+    1. MCC: 234 MNC: 50 RAT(s): E-UTRAN in WB-S1 mode and NB-S1 mode, GSM and EC-GSM-IoT
+    2. MCC: 234 MNC: 15 RAT(s): E-UTRAN in WB-S1 mode and NB-S1 mode, GSM and EC-GSM-IoT
+
 Returns an empty string on error
 '''
 def decode_table(data):
@@ -89,8 +125,10 @@ def decode_table(data):
     count = 1
     pairs = ""
     for j in range(0, len(nets), 10):
-        mcc, mnc = plmn_decoder(nets[j:j + 6])
-        pairs += "{}. MCC: {} MNC: {}\n".format(count, mcc, mnc)
+        mcc, mnc, lte, gsm = plmn_decoder(nets[j:j + 10])
+        lte = decode_lte(lte)
+        gsm = decode_gsm(gsm)
+        pairs += "{}. MCC: {} MNC: {} RAT(s): {}, {}\n".format(count, mcc, mnc, lte, gsm)
         count += 1
     return pairs[:-1]
 
