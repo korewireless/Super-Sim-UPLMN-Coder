@@ -64,10 +64,10 @@ class CodecTests(unittest.TestCase):
 
     def test_decode_table(self):
         # Basic cases
-        self.assertEqual(decode_table("AT+CRSM=214,28512,0,0,10,13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410\n")
-        self.assertEqual(decode_table("10,13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410\n")
-        self.assertEqual(decode_table("13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410\n")
-        self.assertEqual(decode_table("+CRSM: 144,0,13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410\n")
+        self.assertEqual(decode_table("AT+CRSM=214,28512,0,0,10,13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410")
+        self.assertEqual(decode_table("10,13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410")
+        self.assertEqual(decode_table("13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410")
+        self.assertEqual(decode_table("+CRSM: 144,0,13006240801300144080"), "1. MCC: 310 MNC: 260\n2. MCC: 310 MNC: 410")
 
         # Short table entry
         self.assertEqual(decode_table("82F988408"), "")

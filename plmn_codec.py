@@ -76,6 +76,7 @@ which can be decoded with the -p switch:
 to give:
     1. MCC: 234 MNC: 50
     2. MCC: 234 MNC: 15
+Returns an empty string on error
 '''
 def decode_table(data):
     # Find the PLMN entry
@@ -89,9 +90,9 @@ def decode_table(data):
     pairs = ""
     for j in range(0, len(nets), 10):
         mcc, mnc = plmn_decoder(nets[j:j + 6])
-        pairs += (str(count) + ". MCC: " + mcc + " MNC: " + mnc + "\n")
+        pairs += "{}. MCC: {} MNC: {}\n".format(count, mcc, mnc)
         count += 1
-    return pairs
+    return pairs[:-1]
 
 
 '''
@@ -163,11 +164,12 @@ if __name__ == '__main__':
 
             entries.append(item)
 
-    if len(entries) % 2 != 0:
+    entry_count = len(entries)
+    if entry_count % 2 != 0:
         show_err_and_exit("An MCC-MNC pairing is incomplete")
 
-    if len(entries) > 0:
+    if entry_count:
         plmn_list = ""
-        for i in range(0, len(entries), 2):
+        for i in range(0, entry_count, 2):
             plmn_list += plmn_encoder(entries[i], entries[i + 1])
-        print("AT+CRSM=214,28512,0,0," + str(len(plmn_list) // 2) + "," + plmn_list)
+        print("AT+CRSM=214,28512,0,0,{},{}".format(len(plmn_list) // 2, plmn_list))
