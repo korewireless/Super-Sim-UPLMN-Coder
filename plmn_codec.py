@@ -30,7 +30,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 IMPORTS
 '''
-from sys import exit, argv
+import sys
 
 
 '''
@@ -87,8 +87,8 @@ def decode_table(data):
 
     count = 1
     pairs = ""
-    for i in range(0, len(nets), 10):
-        mcc, mnc = plmn_decoder(nets[i:i + 6])
+    for j in range(0, len(nets), 10):
+        mcc, mnc = plmn_decoder(nets[j:j + 6])
         pairs += (str(count) + ". MCC: " + mcc + " MNC: " + mnc + "\n")
         count += 1
     return pairs
@@ -100,7 +100,7 @@ the specified error code
 '''
 def show_err_and_exit(msg, code=1):
     print("[ERROR]",msg)
-    exit(code)
+    sys.exit(code)
 
 
 '''
@@ -130,16 +130,16 @@ RUNTIME START
 if __name__ == '__main__':
     entries = []
     arg_is_value = False
-    option = ""
+    last_option = ""
 
-    if len(argv) > 1:
-        for index, item in enumerate(argv):
+    if len(sys.argv) > 1:
+        for index, item in enumerate(sys.argv):
             if index == 0: continue
 
             if arg_is_value:
                 arg_is_value = False
                 if item[0] == "-":
-                    show_err_and_exit("Missing value after option " + option)
+                    show_err_and_exit("Missing value after option " + last_option)
                 result = decode_table(item)
                 if result:
                     print(result)
@@ -149,13 +149,13 @@ if __name__ == '__main__':
 
             if item in ("-h", "--help"):
                 show_help()
-                exit(0)
+                sys.exit(0)
 
             if item in ("-p", "--plmn"):
-                option = item
+                last_option = item
                 arg_is_value = True
-                if index == len(argv) - 1:
-                    show_err_and_exit("Missing value after option " + option)
+                if index == len(sys.argv) - 1:
+                    show_err_and_exit("Missing value after option " + last_option)
                 continue
 
             if item[0] == "-":
@@ -167,7 +167,7 @@ if __name__ == '__main__':
         show_err_and_exit("An MCC-MNC pairing is incomplete")
 
     if len(entries) > 0:
-        plmns = ""
+        plmn_list = ""
         for i in range(0, len(entries), 2):
-            plmns += plmn_encoder(entries[i], entries[i + 1])
-        print("AT+CRSM=214,28512,0,0," + str(len(plmns) // 2) + "," + plmns)
+            plmn_list += plmn_encoder(entries[i], entries[i + 1])
+        print("AT+CRSM=214,28512,0,0," + str(len(plmn_list) // 2) + "," + plmn_list)
