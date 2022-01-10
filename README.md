@@ -1,4 +1,4 @@
-# Super SIM UPLMN Codec
+# Super SIM UPLMN Codec 1.0.0
 
 A basic but handy SIM UPLMN (User-controlled Public Land Mobile Network) table coder and decoder. Use it to generate and check Super SIM UPLMN table entries. For more details see [**How and Why You Can Set Super SIM’s Network Attach Priority List**](https://www.twilio.com/docs/iot/supersim/how-and-why-to-set-super-sims-uplmn-table).
 
@@ -18,17 +18,17 @@ Values are not checked for validity.
 
 **Examples**
 
-```
+```shell
 $ python plmn_codec.py 310 410
 AT+CRSM=214,28512,0,0,5,1300144080
 ```
 
-```
+```shell
 $ python plmn_codec.py 310 410 310 260
 AT+CRSM=214,28512,0,0,10,13001440801300624080
 ```
 
-```
+```shell
 $ python plmn_codec.py 310 410 310
 [ERROR] An MCC-MNC pairing is incomplete
 ```
@@ -43,24 +43,24 @@ You can decode UPLMN table entries, or entire tables, with the `-p` option.
 
 **Examples**
 
-```
+```shell
 $ python plmn_codec.py -p '+CRSM: 144,0,1300144080'
 1. MCC: 310 MNC: 410 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 ```
 
-```
+```shell
 $ python plmn_codec.py -p AT+CRSM=214,28512,0,0,10,13006240801300144080
 1. MCC: 310 MNC: 260 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 2. MCC: 310 MNC: 410 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 ```
 
-```
+```shell
 $ python plmn_codec.py -p 13006240801300144080
 1. MCC: 310 MNC: 260 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 2. MCC: 310 MNC: 410 RAT(s): E-UTRAN in WB-S1, NB-S1 modes, GSM + EC-GSM-IoT
 ```
 
-```
+```shell
 $ python plmn_codec.py -p 1300624
 [ERROR] Malformed PLMNS data: 1300624
 ```
