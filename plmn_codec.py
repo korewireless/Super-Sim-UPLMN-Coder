@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-'''
+"""
 Super SIM UPLMN Codec
 
 @version    1.0.0
@@ -25,21 +25,21 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
-'''
+"""
 IMPORTS
-'''
+"""
 import sys
 
 
-'''
+"""
 FUNCTIONS
-'''
+"""
 
-'''
+"""
 Assemble a PLMN string from MCC, MNC values
-'''
+"""
 def plmn_encoder(mcc, mnc):
     # Use 'F' for unused columns, ie. '81' -> '81F'
     if len(mnc) < 3: mnc += "FFF"[:3 - len(mnc)]
@@ -55,9 +55,9 @@ def plmn_encoder(mcc, mnc):
     return plmn + "4080"
 
 
-'''
+"""
 Turn a PLMN entry, eg. '1300144080' into MCC, MNC values (tuple)
-'''
+"""
 def plmn_decoder(plmn):
     # Rearrange octets and output
     mcc = (plmn[1] + plmn[0] + plmn[3]).replace("F", "")
@@ -67,9 +67,9 @@ def plmn_decoder(plmn):
     return (mcc, mnc, lte, gsm)
 
 
-'''
+"""
 Determine the PLMN entry's LTE mode
-'''
+"""
 def decode_lte(byte_value):
     sub_lte = ["E-UTRAN in WB-S1, NB-S1 modes", "E-UTRAN in NB-S1 mode only",
                "E-UTRAN in WB-S1 mode only", "E-UTRAN in WB-S1, NB-S1 modes"]
@@ -78,14 +78,14 @@ def decode_lte(byte_value):
     if byte_value & 0x40:
         code += (sub_lte[(byte_value & 0x30) >> 4] + ", ")
     if byte_value & 0x08: code += "NG-RAN, "
-    if len(code): code = code[:-2]
+    if len(code) > 0: code = code[:-2]
     if byte_value & 0x07 > 0: code += " -- WARNING: Reserved bits set"
     return code
 
 
-'''
+"""
 Determine the PLMN entry's GSM/CDMA mode
-'''
+"""
 def decode_gsm(byte_value):
     sub_gsm = ["GSM + EC-GSM-IoT", "GSM",
                "EC-GSM-IoT", "GSM + EC-GSM-IoT"]
@@ -95,12 +95,12 @@ def decode_gsm(byte_value):
     if byte_value & 0x40: code += "GSM COMPACT, "
     if byte_value & 0x20: code += "CDMA2000 HRPD, "
     if byte_value & 0x10: code += "CDMA2000 1xRTT, "
-    if len(code): code = code[:-2]
+    if len(code) > 0: code = code[:-2]
     if byte_value & 0x03 > 0: code += " -- WARNING: Reserved bits set"
     return code
 
 
-'''
+"""
 Decode a complete or partial UPLMN table
 For example, the AT command:
     'AT+CRSM=176,28512,0,0,10'
@@ -113,7 +113,7 @@ to give:
     2. MCC: 234 MNC: 15 RAT(s): E-UTRAN in WB-S1 mode and NB-S1 mode, GSM and EC-GSM-IoT
 
 Returns an empty string on error
-'''
+"""
 def decode_table(data):
     # Find the PLMN entry
     parts = data.split(",")
@@ -128,23 +128,23 @@ def decode_table(data):
         mcc, mnc, lte, gsm = plmn_decoder(nets[j:j + 10])
         lte = decode_lte(lte)
         gsm = decode_gsm(gsm)
-        pairs += "{}. MCC: {} MNC: {} RAT(s): {}, {}\n".format(count, mcc, mnc, lte, gsm)
+        pairs += F"{count}. MCC: {mcc} MNC: {mnc} RAT(s): {lte}, {gsm}\n"
         count += 1
     return pairs[:-1]
 
 
-'''
+"""
 Show an error message then exit with
 the specified error code
-'''
+"""
 def show_err_and_exit(msg, code=1):
     print("[ERROR]",msg)
     sys.exit(code)
 
 
-'''
+"""
 Show the utility help
-'''
+"""
 def show_help():
     show_version()
     print("\nEncode and decode Super SIM UPLMN table entries.\n")
@@ -156,27 +156,30 @@ def show_help():
     print()
 
 
-'''
+"""
 Show the utility name and version
-'''
+"""
 def show_version():
     print("PLMN Codec 1.0.0 copyright (c) 2022 Twilio")
 
 
-'''
-Primary code
-'''
+"""
+Primary code -- a separate function for unit testing
+"""
 def main(args):
     entries = []
-    arg_is_value = False
+    arg_is_a_value = False
     last_option = ""
 
     if len(args):
         for index, item in enumerate(args):
-            if arg_is_value:
-                arg_is_value = False
+            if arg_is_a_value:
+                # Argument is a value - ie. a UPLMN table entry
+                arg_is_a_value = False
                 if item[0] == "-":
                     show_err_and_exit("Missing value after option " + last_option)
+
+                # Decode the UPLMN table entry and output the result
                 result = decode_table(item)
                 if result:
                     print(result)
@@ -190,7 +193,7 @@ def main(args):
 
             if item.lower() in ("-p", "--plmn"):
                 last_option = item
-                arg_is_value = True
+                arg_is_a_value = True
                 if index == len(args) - 1:
                     show_err_and_exit("Missing value after option " + last_option)
                 continue
@@ -203,19 +206,21 @@ def main(args):
         show_version()
         sys.exit(0)
 
+    # Check we have an even number of MCC and MNC values
     entry_count = len(entries)
     if entry_count % 2 != 0:
         show_err_and_exit("An MCC-MNC pairing is incomplete")
 
+    # Assemble the output AT Command string
     if entry_count:
         plmn_list = ""
         for i in range(0, entry_count, 2):
             plmn_list += plmn_encoder(entries[i], entries[i + 1])
-        print("AT+CRSM=214,28512,0,0,{},{}".format(len(plmn_list) // 2, plmn_list))
+        print(F"AT+CRSM=214,28512,0,0,{len(plmn_list) // 2},{plmn_list}")
 
 
-'''
+"""
 RUNTIME START
-'''
+"""
 if __name__ == '__main__':
     main(sys.argv[1:])
