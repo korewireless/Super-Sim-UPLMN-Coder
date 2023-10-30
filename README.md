@@ -67,6 +67,10 @@ $ python plmn_codec.py -p 1300624
 
 You can include as many `-p` options and accompanying arguments as you require.
 
+## Tests
+
+Run the included test file with `python -m unittest test*`.
+
 ## Copyright
 
 This source code is copyright 2022-23, KORE Wireless.
