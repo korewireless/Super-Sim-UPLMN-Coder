@@ -5,7 +5,7 @@ Super SIM UPLMN Codec
 
 @version    1.0.0
 @author     Tony Smith (@smittytone)
-@copyright  Twilio, Inc.
+@copyright  KORE Wireless
 @licence    MIT
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -160,7 +160,7 @@ def show_help():
 Show the utility name and version
 """
 def show_version():
-    print("PLMN Codec 1.0.0 copyright (c) 2022 Twilio")
+    print("PLMN Codec 1.0.0 copyright (c) 2022-23 KORE Wireless")
 
 
 """

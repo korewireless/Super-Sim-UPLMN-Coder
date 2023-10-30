@@ -5,7 +5,7 @@ Super SIM UPLMN Codec
 
 @version    1.0.0
 @author     Tony Smith (@smittytone)
-@copyright  Twilio, Inc.
+@copyright  KORE Wireless.
 @licence    MIT
 
 Permission is hereby granted, free of charge, to any person obtaining

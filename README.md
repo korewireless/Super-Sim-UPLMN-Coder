@@ -69,7 +69,7 @@ You can include as many `-p` options and accompanying arguments as you require.
 
 ## Copyright
 
-This source code is copyright 2022, Twilio Inc.
+This source code is copyright 2022-23, KORE Wireless.
 
 ## Licence
 
