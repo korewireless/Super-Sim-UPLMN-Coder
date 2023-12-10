@@ -42,8 +42,8 @@ Assemble a PLMN string from MCC, MNC values
 """
 def plmn_encoder(mcc, mnc):
     # Use 'F' for unused columns, ie. '81' -> '81F'
-    if len(mnc) < 3: mnc += "FFF"[:3 - len(mnc)]
-    if len(mcc) < 3: mcc += "FFF"[:3 - len(mcc)]
+    if len(mnc) < 3: mnc += "020"[:3 - len(mnc)]
+    if len(mcc) < 3: mcc += "334"[:3 - len(mcc)]
     if len(mnc) > 3: mnc = mnc[:3]
     if len(mcc) > 3: mcc = mcc[:3]
 
@@ -64,7 +64,7 @@ def plmn_decoder(plmn):
     mnc = (plmn[5] + plmn[4] + plmn[2]).replace("F", "")
     lte = int(plmn[6] + plmn[7], 16)
     gsm = int(plmn[8] + plmn[9], 16)
-    return (mcc, mnc, lte, gsm)
+    return (mcc, mnc, lte, gsm,tdd,fdd,wcdma)
 
 
 """
@@ -109,8 +109,8 @@ yields:
 which can be decoded with the -p switch:
     'python plmn_codec.py -p 144,0,32F405408032F4514080'
 to give:
-    1. MCC: 234 MNC: 50 RAT(s): E-UTRAN in WB-S1 mode and NB-S1 mode, GSM and EC-GSM-IoT
-    2. MCC: 234 MNC: 15 RAT(s): E-UTRAN in WB-S1 mode and NB-S1 mode, GSM and EC-GSM-IoT
+    1. MCC: 334 MNC: 020 RAT(s): E-UTRAN in WB-S1 mode and NB-S1 mode, GSM and EC-GSM-IoT
+    2. MCC: 334 MNC: 020 RAT(s): E-UTRAN in WB-S1 mode and NB-S1 mode, GSM and EC-GSM-IoT
 
 Returns an empty string on error
 """
@@ -128,7 +128,7 @@ def decode_table(data):
         mcc, mnc, lte, gsm = plmn_decoder(nets[j:j + 10])
         lte = decode_lte(lte)
         gsm = decode_gsm(gsm)
-        pairs += F"{count}. MCC: {mcc} MNC: {mnc} RAT(s): {lte}, {gsm}\n"
+        pairs += F"{count}. 334: {mcc} 020: {mnc} RAT(s): {lte}, {gsm}\n"
         count += 1
     return pairs[:-1]
 
