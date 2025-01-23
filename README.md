@@ -1,6 +1,6 @@
 # Super SIM UPLMN Codec 1.0.0
 
-A basic but handy SIM UPLMN (User-controlled Public Land Mobile Network) table coder and decoder. Use it to generate and check Super SIM UPLMN table entries. For more details see [**How and Why You Can Set Super SIM’s Network Attach Priority List**](https://www.twilio.com/docs/iot/supersim/how-and-why-to-set-super-sims-uplmn-table).
+A basic but handy SIM UPLMN (User-controlled Public Land Mobile Network) table coder and decoder. Use it to generate and check Super SIM UPLMN table entries. For more details see [**How and Why You Can Set Super SIM’s Network Attach Priority List**](https://docs.korewireless.com/en-us/supersim/how-to/how-and-why-to-set-super-sims-uplmn-table).
 
 ## Requirements
 
